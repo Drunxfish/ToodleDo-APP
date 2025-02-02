@@ -1,6 +1,6 @@
 # 📝 ToodleDo - Task Management App
 
-ToodleDo is a simple and efficient task management application that helps users stay organized. With features like **user authentication (register/login), task creation, and task management**, it provides an intuitive way to track daily to-dos.
+ToodleDo is a simple and efficient task management application that helps users stay organized. With features like **user authentication (register/login), task creation, and task management**, it provides an intuitive way to track daily to-dos using PHP Data Objects to execute CRUD operations
 
 ## 🔹 Features
 ✅ User Registration & Login  
@@ -21,4 +21,4 @@ Feel free to use, modify, and distribute it as long as you provide proper attrib
 
 ---
 
-🚀 **Stay productive with ToodleDo!**  
+🚀 **Stay productive with ToodleDo! :D**  

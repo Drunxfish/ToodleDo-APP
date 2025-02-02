@@ -24,14 +24,14 @@ SOFTWARE.
 ## Third-Party Assets
 
 <!-- ICONS -->
-- **Asset Name**: Idea Icon (locally: todoodle)
-  - **Creator**: Freepik
-  - **License**: Free for personal and commercial use, attribution required
-  - **Source**: [Flaticon - Idea Icon](https://www.flaticon.com/free-icon/idea_1030902?term=bulb&page=1&position=35&origin=search&related_id=1030902)
-
 - **Google Material Icons**: [Google Fonts - Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.style=Rounded)
-  - **License**: Apache License 2.0
-  - **Creator**: Google
+- **License**: Apache License 2.0
+- **Creator**: Google
+- **Flaticon - All Icons**: [Flaticon](https://www.flaticon.com) (Attribution required)
+  - **License**: Free for personal and commercial use, attribution required
+  - **Attribution**: "Icons Assets/Icons/check.png, cross.png, information.png, toodledo.png made by [Flaticon](https://www.flaticon.com)"
+
+
 
 <!-- FONTS -->
 - **Roboto**: [Google Fonts - Roboto](https://fonts.google.com/specimen/Roboto)
@@ -39,5 +39,14 @@ SOFTWARE.
 - **Montserrat**: [Google Fonts - Montserrat](https://fonts.google.com/specimen/Montserrat)
 - **Lato**: [Google Fonts - Lato](https://fonts.google.com/specimen/Lato)
 - **Quicksand**: [Google Fonts - Quicksand](https://fonts.google.com/specimen/Quicksand)
-
 - **License**: Apache License 2.0
+
+
+
+<!-- PHOTOS -->
+- **Pexels**: [Pexels - Free Stock Photos](https://www.pexels.com)
+  - **License**: Free for personal and commercial use, no attribution required
+
+- **Freepik**: [Freepik - Free Vector Art, Stock Photos, and PSD](https://www.freepik.com)
+  - **License**: Free for personal and commercial use, attribution required
+  - **Attribution**: "Assets/Images/Background.png, Background1.png, Background3.png  by Freepik"

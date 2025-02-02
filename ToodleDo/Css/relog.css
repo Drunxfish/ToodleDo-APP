@@ -1,0 +1,191 @@
+/* color pallete  */
+/* :root{
+    --black: #181818;
+    --white:#FFFFFF;
+    --bright-yellow:#FEE900;
+    --golden-yellow:#FED500;
+    --navy-blue:#004370;
+    --dark-blue:#01579A;
+} */
+
+body{
+    background-image: url(./../Assets/Images/background2.png);
+    background-size: cover;
+    background-position: calc(100vw - 80vw);
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.toodleDo{
+    position: fixed;
+    top: 5%;
+    left: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vh;
+    img{
+        height: 10vh;
+    }
+
+    span{
+        font-weight: bold;
+        font-size: 3vh;
+        font-family: cursive;
+    }
+}
+
+
+
+.wrapper{
+    background-color: var(--white);
+    height: 100vh;
+    width: max(40%, 600px);
+    text-align: center;
+    padding: 10px;
+    border-radius: 0 20px 20px 0 ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: .5s ease;
+
+}
+
+.wrapper h1{
+    margin-top: 30%;
+    font-size: 5vh;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.wrapper form{
+    margin-top: 10%;
+    width: min(400px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-items: center;
+    gap: 30px;
+    overflow-y: auto;
+}
+
+.wrapper form > div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper form label{
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background-color: var(--bright-yellow);
+    fill: (var(--golden-yellow));
+    color: var(--white);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    transition: .2s ease-in-out;
+}
+
+.wrapper form label span.emLBL{
+    color: var(--black);
+    font-weight: bold;
+}
+
+.wrapper form input{
+    flex-grow: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 1em;
+    font: inherit;
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--inp);
+    background-color: var(--inp);
+    transition: 150ms ease;
+}
+
+.wrapper form input:hover{
+    border-color: var(--black);
+}
+
+.wrapper form input:focus{
+    outline: none;
+    border-color: #f0ebc3!;
+}
+div:has(input:focus) > label, div:has(input:focus) > label .emLBL{
+    background-color: var(--black);
+    fill: white;
+    color: white !important;
+}
+
+/* .wrapper form input::placeholder{
+    /* color: var(--black); 
+} */
+
+
+.wrapper form button{
+    margin: 10px;
+    border: none;
+    border-radius: 1000px;
+    padding: .85em 4em;
+    background-color: var(--bright-yellow);
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.wrapper form button:hover{
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.wrapper form button:focus{
+    outline: none;
+}
+
+.wrapper a{
+    text-decoration: none;
+    color: var(--navy-blue);
+
+}
+
+.wrapper a:hover{
+    text-decoration: underline;
+}
+
+
+.wrapper form div.incorrect label{
+    background-color: var(--incorrect) !important;
+}
+
+/* .wrapper form div.incorrect input{
+    background-color: var(--incorrect) !important;
+} */
+
+
+
+@media (max-width: 1000px){
+    .wrapper{
+        width: min(600px, 100%);
+        border-radius: 0;
+        overflow-y: auto;
+    }
+    .wrapper form{
+        margin-top: 10%;
+        min-height: fit-content;
+        overflow-y: auto;
+
+    }
+    .wrapper h1{
+        margin-top: 40%;
+
+        font-size: 3vh;
+    }
+    
+}
