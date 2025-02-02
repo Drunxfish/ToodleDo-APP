@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 Alex
+Copyright (c) 2025 Alexandre
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+## Third-Party Assets
+
+<!-- ICONS -->
+- **Asset Name**: Idea Icon (locally: todoodle)
+  - **Creator**: Freepik
+  - **License**: Free for personal and commercial use, attribution required
+  - **Source**: [Flaticon - Idea Icon](https://www.flaticon.com/free-icon/idea_1030902?term=bulb&page=1&position=35&origin=search&related_id=1030902)
+
+- **Google Material Icons**: [Google Fonts - Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.style=Rounded)
+  - **License**: Apache License 2.0
+  - **Creator**: Google
+
+<!-- FONTS -->
+- **Roboto**: [Google Fonts - Roboto](https://fonts.google.com/specimen/Roboto)
+- **Poppins**: [Google Fonts - Poppins](https://fonts.google.com/specimen/Poppins)
+- **Montserrat**: [Google Fonts - Montserrat](https://fonts.google.com/specimen/Montserrat)
+- **Lato**: [Google Fonts - Lato](https://fonts.google.com/specimen/Lato)
+- **Quicksand**: [Google Fonts - Quicksand](https://fonts.google.com/specimen/Quicksand)
+
+- **License**: Apache License 2.0

@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Poppins:wght@400&family=Montserrat:wght@400&family=Lato:wght@400;500&family=Quicksand:wght@400&display=swap');
+
+*{
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* color pallete  */
+:root{
+    --black: #181818;
+    --white:#FFFFFF;
+    --bright-yellow:#FEE900;
+    --golden-yellow:#FED500;
+    --navy-blue:#004370;
+    --dark-blue:#01579A;
+}
