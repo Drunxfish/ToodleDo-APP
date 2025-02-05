@@ -1,13 +1,3 @@
-/* color pallete  */
-/* :root{
-    --black: #181818;
-    --white:#FFFFFF;
-    --bright-yellow:#FEE900;
-    --golden-yellow:#FED500;
-    --navy-blue:#004370;
-    --dark-blue:#01579A;
-} */
-
 body{
     background-image: url(./../Assets/Images/background2.png);
     background-size: cover;

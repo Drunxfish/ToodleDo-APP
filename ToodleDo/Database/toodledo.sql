@@ -15,6 +15,7 @@ CREATE TABLE tasks (
     user_id INT,
     title VARCHAR(255) NOT NULL,
     description TEXT,
+    start_date DATETIME
     due_date DATETIME,
     status ENUM('pending', 'completed', 'in-progress') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

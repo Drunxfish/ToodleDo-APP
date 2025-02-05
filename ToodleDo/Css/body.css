@@ -1,41 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&family=Poppins:wght@400&family=Montserrat:wght@400&family=Lato:wght@400;500&family=Quicksand:wght@400&display=swap');
 
-*{
+* {
     font-family: 'Montserrat', sans-serif;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-size: 12pt;
 }
+
+/* 
+body {
+    background-color: var(--white);
+    color: var(--black);
+    min-height: 100vh;
+} */
 
 
 ::-webkit-scrollbar {
     width: 0.4vw;
     opacity: 0.1;
 }
+
 ::-webkit-scrollbar-thumb {
     height: 33vh;
     background-color: #686868;
     border-radius: 20vh;
 }
+
 ::-webkit-scrollbar-track {
     background-color: rgb(216, 230, 238);
 }
 
 
-body{
-    min-height: 100vh;
-}
-
-
 /* color pallete  */
-:root{
+:root {
     --black: #181818;
-    --white:#FFFFFF;
-    --bright-yellow:#FEE900;
-    --golden-yellow:#FED500;
-    --navy-blue:#004370;
-    --dark-blue:#01579A;
-    --inp:#d3d3d3;
-    --incorrect:#F74850;
+    --white: #FFFFFF;
+    --gray: #9e9b9b;
+    --bright-yellow: #FEE900;
+    --golden-yellow: #FED500;
+    --navy-blue: #004370;
+    --dark-blue: #01579A;
+    --inp: #d3d3d3;
+    --incorrect: #F74850;
+    --correct: #48f77c;
+    --upcoming: #007bff;
+    --overdue: #dc3545;
+    --completed: #28a745;
 }
