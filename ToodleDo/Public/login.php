@@ -31,15 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             // Incorrect password
             $_SESSION['userFeedback'] = [
-                'message' => 'Invalid credentials. Please check your email and password and try again.',
+                'message' => "We couldn't log you in. Please check your credentials and try again.",
                 'icon' => 'cross'
             ];
         }
-    # account doesn't exist
+        # account doesn't exist
     } else {
         $_SESSION['userFeedback'] = [
-            'message' => 'Login failed. No account found with the provided email address.',
-            'icon' => 'information'
+            'message' => "We couldn't log you in. Please check your credentials and try again.",
+            'icon' => 'cross'
         ];
     }
 }
@@ -95,10 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php if (isset($_SESSION['userFeedback'])): ?>
             <div class="toast">
                 <i>
-                    <img src="./../Assets/Icons/<?php echo $_SESSION['userFeedback']['icon']; ?>.png" alt="logo">
+                    <img src="./../Assets/Icons/<?= htmlspecialchars($_SESSION['userFeedback']['icon']) ?>.png" alt="logo">
                 </i>
                 <p>
-                    <?php echo $_SESSION['userFeedback']['message']; ?>
+                    <?= htmlspecialchars($_SESSION['userFeedback']['message']) ?>
                 </p>
             </div>
             <?php unset($_SESSION['userFeedback']); endif; ?>

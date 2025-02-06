@@ -20,12 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($userDB->selectEmail($_POST['email'])) {
         # feedback
         $_SESSION['userFeedback'] = [
-            'message' => 'This email address is already in use. Please choose a different email address or log in.',
+            'message' => 'This email address is unavailable. Please choose a different one or log in to your account.',
             'icon' => 'information'
         ];
 
-        header("Location: sign_up.php");
-        exit;
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
     }
 
     // email validation (extra)
@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'icon' => 'cross'
         ];
 
-        header('Location: sign_up.php');
-        exit;
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
     }
 
 
@@ -137,10 +137,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php if (isset($_SESSION['userFeedback'])): ?>
             <div class="toast">
                 <i>
-                    <img src="./../Assets/Icons/<?php echo $_SESSION['userFeedback']['icon']; ?>.png" alt="logo">
+                    <img src="./../Assets/Icons/<?= htmlspecialchars($_SESSION['userFeedback']['icon']) ?>.png" alt="logo">
                 </i>
                 <p>
-                    <?php echo $_SESSION['userFeedback']['message']; ?>
+                    <?= htmlspecialchars($_SESSION['userFeedback']['message']) ?>
                 </p>
             </div>
             <?php unset($_SESSION['userFeedback']); endif; ?>

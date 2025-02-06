@@ -107,15 +107,15 @@ body{
     outline: none;
     border-color: #f0ebc3!;
 }
-div:has(input:focus) > label, div:has(input:focus) > label .emLBL{
+div:has(input:focus) > label{
     background-color: var(--black);
-    fill: white;
-    color: white !important;
+    fill: var(--white);
+    color: var(--white) !important;
 }
-
-/* .wrapper form input::placeholder{
-    /* color: var(--black); 
-} */
+div:has(input:focus) > label .emLBL{
+    background: none;
+    color: white;
+}
 
 
 .wrapper form button{

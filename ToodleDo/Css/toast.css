@@ -29,6 +29,7 @@
     transform: translateX(-150%);
     animation: slideLeft 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
     transition: all 0.8s ease-in-out;
+    z-index: 999999999999999999999999999999999999999999999999999999999999999;
 }
 
 .toast i{
@@ -64,4 +65,10 @@
     100%{
         transform: translateX(0);
     }
+}
+
+
+.uflp{
+    position: fixed;
+    left: 5%;
 }

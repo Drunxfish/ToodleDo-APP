@@ -1,17 +1,20 @@
 // elements
 const formSlider = document.querySelectorAll('.formSlider');
-const formCloserBTN = document.getElementById('formCloserBTN');
+const formCloserBTN = document.querySelectorAll('.formCloserBTN');
 const frmContainer = document.querySelector('.frmContainer');
+const frmEditct = document.querySelector('.frmEDIT');
 const modal = document.querySelector('.modal');
 
 
 
-// closes
-formCloserBTN.addEventListener('click', (e) => {
-    frmContainer.style.display = 'none';
-    document.body.style.overflow = '';
-});
-
+// closes form
+formCloserBTN.forEach(element => {
+    element.addEventListener('click', (e) => {
+        frmContainer.style.display = 'none';
+        document.body.style.overflow = '';
+        window.location.href = 'dashboard.php';
+    });
+})
 
 
 // opens form
