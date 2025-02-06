@@ -1,43 +1,29 @@
 <?php
 
-// SS
+// SS/DB
+require_once './../Includes/user.php';
 session_start();
 
 
 // sends logged users to dashboard
-if (isset($_SESSION['logged'])) {
-    header("Location: ./dashboard.php");
-    exit;
-}
+$userDB->pdo->sendToDashboard();
 
 
 // handles form request
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // get user db
-    require_once './../Includes/user.php';
 
     // get email
     if ($userDB->selectEmail($_POST['email'])) {
-        # feedback
-        $_SESSION['userFeedback'] = [
-            'message' => 'This email address is unavailable. Please choose a different one or log in to your account.',
-            'icon' => 'information'
-        ];
-
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        # feedback/redirect
+        $userDB->pdo->feedback("This email address is unavailable. Please choose a different one or log in to your account.", "information");
+        $userDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
 
     // email validation (extra)
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        # feedback
-        $_SESSION['userFeedback'] = [
-            'message' => 'Invalid email address. Please enter a valid email address.',
-            'icon' => 'cross'
-        ];
-
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        # feedback/redirect
+        $userDB->pdo->feedback("Invalid email address. Please enter a valid email address.", "cross");
+        $userDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
 
 
@@ -48,21 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST['email'],
             $_POST['password']
         );
+        # feedback/redirect
+        $userDB->pdo->feedback("Registration successful! Your account has been created.", "check");
+        $userDB->pdo->pageRef('login.php');
 
-        # feedback
-        $_SESSION['userFeedback'] = [
-            'message' => 'Registration successful! Your account has been created.',
-            'icon' => 'check'
-        ];
-
-        header("Location: login.php");
-        exit;
     } catch (PDOException $e) {
         # feedback
-        $_SESSION['userFeedback'] = [
-            'message' => 'Registration Failed, Please try again later.',
-            'icon' => 'information'
-        ];
+        $userDB->pdo->feedback("Registration Failed, Please try again later.", "information");
     }
 }
 

@@ -1,20 +1,16 @@
 <?php
 
-// SS
+// SS/DB
+require_once './../Includes/user.php';
 session_start();
 
 
 // sends logged users to dashboard
-if (isset($_SESSION['logged'])) {
-    header("Location: ./dashboard.php");
-    exit;
-}
+$userDB->pdo->sendToDashboard();
 
 
 // handles form request
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // get user db
-    require_once './../Includes/user.php';
 
     // get user data
     $user = $userDB->logUser($_POST['email']);
@@ -26,21 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
-            header("Location: dashboard.php");
-            exit;
+            $userDB->pdo->pageRef('dashboard.php');
         } else {
             // Incorrect password
-            $_SESSION['userFeedback'] = [
-                'message' => "We couldn't log you in. Please check your credentials and try again.",
-                'icon' => 'cross'
-            ];
+            $userDB->pdo->feedback("We couldn't log you in. Please check your credentials and try again.", "cross");
         }
         # account doesn't exist
     } else {
-        $_SESSION['userFeedback'] = [
-            'message' => "We couldn't log you in. Please check your credentials and try again.",
-            'icon' => 'cross'
-        ];
+        $userDB->pdo->feedback("We couldn't log you in. Please check your credentials and try again.", "cross");
     }
 }
 

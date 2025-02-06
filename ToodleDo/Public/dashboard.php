@@ -2,16 +2,14 @@
 
 // SS
 session_start();
-
-
-// sends logged users to dashboard
-if (!isset($_SESSION['logged']) || !isset($_SESSION['logged'])) {
-    header("Location: logout.php");
-    exit;
-}
-
-
 require './../Includes/task.php';
+
+
+// sends logged users to dashboard; if not authorised
+$taskDB->pdo->sendAway();
+
+
+
 
 
 
@@ -38,23 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
 
             // Feedback
-            $_SESSION['userFeedback'] = [
-                'message' => 'Task Added Successfully',
-                'icon' => 'check'
-            ];
+            $taskDB->pdo->feedback("Task Added Successfully", "check");
 
-            header("Location: dashboard.php");
-            exit();
+            $taskDB->pdo->pageRef('dashboard.php');
         } catch (\Throwable $th) {
-            // Feedback
-            $_SESSION['userFeedback'] = [
-                'message' => 'Oopsies... Something went wrong, please try again later',
-                'icon' => 'information'
-            ];
-
-            // header
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
+            // Feedback/redirect
+            $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+            $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
         }
     }
 
@@ -74,24 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
 
             // Feedback
-            $_SESSION['userFeedback'] = [
-                'message' => 'Task Updated Successfully',
-                'icon' => 'check'
-            ];
+            $taskDB->pdo->feedback("Task Updated Successfully", "check");
 
             // header
             header("Location: " . $_SERVER['PHP_SELF']);
             exit();
         } catch (\Throwable $th) {
-            // Feedback
-            $_SESSION['userFeedback'] = [
-                'message' => 'Oopsies... Something went wrong, please try again later',
-                'icon' => 'information'
-            ];
-
-            // header
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
+            // Feedback/redirect
+            $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+            $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
         }
     }
 }
@@ -103,26 +82,13 @@ if (isset($_GET['TSKDLXXX'])) {
     try {
         // task deletion
         $taskDB->deleteTask($_GET['TSKDLXXX'], $_SESSION['id']);
-
-        // Feedback
-        $_SESSION['userFeedback'] = [
-            'message' => 'Task Deleted Successfully',
-            'icon' => 'check'
-        ];
-
-        // header
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        // Feedback/redirect
+        $taskDB->pdo->feedback("Task Deleted Successfully", "check");
+        $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
     } catch (\Throwable $th) {
-        // Feedback
-        $_SESSION['userFeedback'] = [
-            'message' => 'Oopsies... Something went wrong, please try again later',
-            'icon' => 'information'
-        ];
-
-        // header
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        // Feedback/redirect
+        $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+        $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
 }
 
@@ -133,14 +99,9 @@ if (isset($_GET['TSKXXX'])) {
         $tskData = $taskDB->selectTaskById($_GET['TSKXXX'], $_SESSION['id']);
         $status = $tskData['status'];
     } catch (\Throwable $th) {
-        // Feedback
-        $_SESSION['userFeedback'] = [
-            'message' => 'Oopsies... Something went wrong, please try again later',
-            'icon' => 'information'
-        ];
-        // header
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        // Feedback/redirect
+        $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+        $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
 }
 
@@ -363,7 +324,7 @@ if (isset($_GET['TSKXXX'])) {
                     </div>
                     <div class="input">
                         <label class="input__label">Start-Date</label>
-                        <input class="input__field"  min="2025-02-05" type="date" name="startDate" required>
+                        <input class="input__field" min="2025-02-05" type="date" name="startDate" required>
                     </div>
                     <div class="input">
                         <label class="input__label">Deadline</label>
@@ -372,7 +333,7 @@ if (isset($_GET['TSKXXX'])) {
                     </div>
                     <div class="input">
                         <label class="input__label">Status</label>
-                        <select class="input__field" name="status"  id="status" required>
+                        <select class="input__field" name="status" id="status" required>
                             <option value="" selected disabled>Task Status</option>
                             <option value="pending">🕒Pending</option>
                             <option value="completed">✅ Completed</option>
@@ -382,7 +343,8 @@ if (isset($_GET['TSKXXX'])) {
                     <div class="input">
                         <label class="input__label">Description</label>
                         <textarea rows="4" cols="50" class="input__field input__field--textarea" name="tskDescription"
-                            placeholder="Time to sweat it out! Get to the gym and crush your workout." required></textarea>
+                            placeholder="Time to sweat it out! Get to the gym and crush your workout."
+                            required></textarea>
                         <p class="input__description">Give your task a good description</p>
                     </div>
                 </div>
