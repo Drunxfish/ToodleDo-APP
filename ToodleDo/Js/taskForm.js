@@ -16,11 +16,15 @@ formCloserBTN.forEach(element => {
 })
 
 
-// opens form
+// opens form with animation
 formSlider.forEach(element => {
     element.addEventListener('click', () => {
-        modal.style.transform = 'translateY(0)';
         frmContainer.style.display = 'flex';
+        frmContainer.style.opacity = 0;
+        setTimeout(() => {
+            frmContainer.style.opacity = 1;
+            modal.style.transform = "translateY(0%)";
+        }, 10);
         document.body.style.overflow = 'hidden';
     });
 });

@@ -4,14 +4,10 @@
 session_start();
 require './../Includes/task.php';
 
-
 // sends logged users to dashboard; if not authorised
 $taskDB->pdo->sendAway();
-
-
-
-
-
+$notifs = $taskDB->selectNotifications($_SESSION['id']);
+$wlcm = $taskDB->greetUser($_SESSION['username']);
 
 // Get all sorts of tasks/notifications
 $completed = $taskDB->selectCompleted($_SESSION['id']);
@@ -19,9 +15,9 @@ $inProgress = $taskDB->selectInProgressPending($_SESSION['id']);
 $overDueTasks = $taskDB->selectOverdueTasks($_SESSION['id']);
 $recent = $taskDB->selectRecentTasks($_SESSION['id']);
 
-// sets overdue tasks to overdue
-$taskDB->changeOverDue($_SESSION['id']);
-
+// Clearing overdue tasks(order matters)
+$taskDB->deleteOverdue($_SESSION['id']); // DELETES overdue tasks 
+$taskDB->changeOverDue($_SESSION['id']); // Changes status of overdue tasks
 
 // Form handling
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -65,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
 
             // Feedback
-            $taskDB->pdo->feedback("Task Updated Successfully", "check");
+            $taskDB->pdo->feedback("Task Updated Successfully", "information");
 
             // header
             header("Location: " . $_SERVER['PHP_SELF']);
@@ -85,9 +81,6 @@ if (isset($_GET['TSKDLXXX'])) {
     try {
         // task deletion
         $taskDB->deleteTask($_GET['TSKDLXXX'], $_SESSION['id']);
-        // Feedback/redirect
-        $taskDB->pdo->feedback("Task Deleted Successfully", "check");
-        $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
     } catch (\Throwable $th) {
         // Feedback/redirect
         $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
@@ -95,9 +88,32 @@ if (isset($_GET['TSKDLXXX'])) {
     }
 }
 
+// Handling task status change
+if (isset($_GET['TSKIDXXXXXXXXXXXXXXXXXXXXXXXXXX']) && isset($_GET['TSKSTSXXXXXXXXXXXXXXXXXXXXXXXXXX'])) {
 
-// Filling update form placeholders
-if (isset($_GET['TSKXXX'])) {
+    $tskIDDD = $_GET['TSKIDXXXXXXXXXXXXXXXXXXXXXXXXXX'];
+    $tskSTSTS = $_GET['TSKSTSXXXXXXXXXXXXXXXXXXXXXXXXXX'];
+
+    switch ($tskSTSTS) {
+        case 'delete':
+            $taskDB->deleteTask($tskIDDD, $_SESSION['id']);
+            break;
+        case 'in-progress':
+            $taskDB->changeTaskStatus($_SESSION['id'], $tskIDDD, $tskSTSTS);
+            break;
+        case 'pending':
+            $taskDB->changeTaskStatus($_SESSION['id'], $tskIDDD, $tskSTSTS);
+        case 'completed':
+            $taskDB->changeTaskStatus($_SESSION['id'], $tskIDDD, $tskSTSTS);
+            break;
+        default:
+            break;
+    }
+}
+
+
+// Filling update form values
+if (isset($_GET['TSKXXX']) && $_GET['TSKXXX']) {
     try {
         $tskData = $taskDB->selectTaskById($_GET['TSKXXX'], $_SESSION['id']);
         $status = $tskData['status'];
@@ -109,6 +125,17 @@ if (isset($_GET['TSKXXX'])) {
     }
 }
 
+// Handling notification deletion
+if (isset($_GET['NTFIDXD'])) {
+    try {
+        $taskDB->deleteAllNotifications($_SESSION['id']);
+        unset($_SESSION['modifiedTSKS']);
+    } catch (\Throwable $th) {
+        // Feedback/redirect
+        $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+        $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
+    }
+}
 
 
 
@@ -129,9 +156,10 @@ if (isset($_GET['TSKXXX'])) {
     <script src="./../Js/nav.js" defer></script>
     <script src="./../Js/taskForm.js" defer></script>
     <script src="./../Js/notifications.js" defer></script>
+    <script src="./../Js/getStatus.js" defer></script>
     <script type="text/javascript" src="./../Js/toastFeedback.js" defer></script>
     <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 
 
@@ -199,7 +227,7 @@ if (isset($_GET['TSKXXX'])) {
     <div class="tskContainer">
         <div class="welcome">
             <div class="wleft">
-                <h2>Hello, <?php echo htmlspecialchars(ucfirst(strtolower($_SESSION['username']))); ?></h2>
+                <h2><?php echo htmlspecialchars(ucfirst(strtolower($wlcm))); ?></h2>
                 <span>Today is <?php echo date('l, j F Y'); ?></span>
             </div>
             <div class="wright">
@@ -225,16 +253,38 @@ if (isset($_GET['TSKXXX'])) {
                     <div class="task-card upcoming">
                         <?php if (isset($inProgress) && $inProgress): ?>
                             <h3>📅 Upcoming Tasks</h3>
-                            <ul class="task-list">
-                                <?php foreach ($inProgress as $Ptsk): ?>
-                                    <li>
-                                        <?= htmlspecialchars($Ptsk['title']) ?>
-                                        <span class="due-date">Due:
-                                            <?= htmlspecialchars($Ptsk['due_date']) ?>
-                                        </span>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
+                            <span class="undeTitleSpan">Don't forget to change pending tasks to in-progress😎</span>
+                            <table class="inProgressTSK-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Due Date</th>
+                                        <th>Due Time</th>
+                                        <th colspan="2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($inProgress as $Ptsk): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($Ptsk['title']) ?></td>
+                                            <td><?= htmlspecialchars($Ptsk['due_date']) ?></td>
+                                            <td><?= htmlspecialchars($Ptsk['due_time']) ?></td>
+                                            <td>
+                                                <select class="taskStatusSelect <?= htmlspecialchars($Ptsk['status']) ?>"
+                                                    TSKIDXXXXXXXXXX="<?= htmlspecialchars($Ptsk['id']) ?>">
+                                                    <option value="in-progress" <?= $Ptsk['status'] == 'in-progress' ? 'selected' : '' ?>>
+                                                        In-progress</option>
+                                                    <option value="pending" <?= $Ptsk['status'] == 'pending' ? 'selected' : '' ?>>
+                                                        Pending</option>
+                                                    <option value="completed" <?= $Ptsk['status'] == 'completed' ? 'selected' : '' ?>>
+                                                        Completed</option>
+                                                    <option value="delete">Delete</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         <?php else: ?>
                             <p>📅 Your Upcoming/Pending Tasks Will Appear Here</p>
                         <?php endif; ?>
@@ -242,16 +292,30 @@ if (isset($_GET['TSKXXX'])) {
                     <div class="task-card completed">
                         <?php if (isset($completed) && $completed): ?>
                             <h3>✅ Completed Tasks</h3>
-                            <ul class="task-list">
-                                <?php foreach ($completed as $tskC): ?>
-                                    <li>
-                                        <?= htmlspecialchars($tskC['title']) ?>
-                                        <span class="due-date">completed on:
-                                            <?= htmlspecialchars($tskC['up_date']) ?>
-                                        </span>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
+                            <?php if (isset($completed) && $completed): ?>
+                                <span class="undeTitleSpan">Completed tasks will be archived 2 days after their
+                                    completion.</span>
+                            <?php endif; ?>
+                            <table class="completedTSK-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($completed as $tskC): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($tskC['title']) ?></td>
+                                            <td><?= htmlspecialchars($tskC['up_date']) ?></td>
+                                            <td><?= htmlspecialchars($tskC['up_time']) ?></td>
+                                            <td><?= htmlspecialchars($tskC['completion_time']) ?> minutes</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         <?php else: ?>
                             <p>✅ Your Completed Tasks Will Appear Here</p>
                         <?php endif; ?>
@@ -281,7 +345,7 @@ if (isset($_GET['TSKXXX'])) {
             </div>
             <div class="tskCurrent">
                 <div class="tskHeader">
-                    <h3>Current Tasks</h3>
+                    <h3>Recent Tasks</h3>
                 </div>
                 <div class="tskBox">
                     <?php if (isset($recent) && $recent): ?>
@@ -289,7 +353,6 @@ if (isset($_GET['TSKXXX'])) {
                             <?php foreach ($recent as $rTSK): ?>
                                 <li>
                                     <span class="taskTitle">🔹<?= htmlspecialchars($rTSK['title']) ?></span>
-
                                     <?php if ($rTSK['status'] == 'overdue'): ?>
                                         <span class="taskDueDate">was due: <?= htmlspecialchars($rTSK['due']) ?></span>
                                         <span
@@ -379,7 +442,17 @@ if (isset($_GET['TSKXXX'])) {
     <div class="notifsView">
         <div class="notifWrapper">
             <div class="notifsTitle">
-                <h3>Notifications Centre</h3>
+                <div class="ntfspc">
+                    <h3>Notifications Centre</h3>
+                    <?php if (isset($notifs) && $notifs): ?>
+                        <span class="offNTF">
+                            <a href="?NTFIDXD">
+                                <span>Clear Notifications</span>
+                                <span class="material-symbols-rounded deleteNTF">delete</span>
+                            </a>
+                        </span>
+                    <?php endif; ?>
+                </div>
                 <button class="notifsCloserBtn frmBTN--icon">
                     <svg width="24" viewBox="0 0 24 24" height="24" xmlns="http://www.w3.org/2000/svg">
                         <path fill="none" d="M0 0h24v24H0V0z"></path>
@@ -388,29 +461,27 @@ if (isset($_GET['TSKXXX'])) {
                         </path>
                     </svg>
                 </button>
-            </div><?php if (isset($_GET['TDLNTF'])): ?> <!--Continue here -->
+            </div>
+            <!-- display notifications -->
+            <?php if (isset($notifs) && $notifs): ?>
                 <div class="notifsBox">
-                    <div class="notif">
-                        <h3>Overdue tasks</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, earum exercitationem ex ea
-                            aliquam corporis totam placeat mollitia, excepturi, esse quas ipsam reprehenderit eaque dolorum?
-                            Labore velit cumque delectus quia.</p>
-                    </div>
-                    <div class="notif">
-                        <h3>Overdue tasks</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, earum exercitationem ex ea
-                            aliquam corporis totam placeat mollitia, excepturi, esse quas ipsam reprehenderit eaque dolorum?
-                            Labore velit cumque delectus quia.</p>
-                    </div>
-                </div>
-            <?php else: ?>
-                <h1 class="noNotifs">No notifications for now, time to focus on tasks 😊</h1>
-            <?php endif; ?>
+                    <?php foreach ($notifs as $notinfo): ?>
+                        <div class="notif">
+                            <div class="ntfspc">
+                                <h3><?= htmlspecialchars($notinfo['title']) ?></h3>
+                            </div>
+                            <p><?= htmlspecialchars($notinfo['message']) ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <h1 class="noNotifs">No notifications for now, time to focus on tasks 😊</h1>
+                <?php endif; ?>
 
+            </div>
         </div>
     </div>
 
-    <?php if (isset($_GET['TSKXXX']) && isset($tskData)): ?>
+    <?php if (isset($_GET['TSKXXX']) && $_GET['TSKXXX'] && isset($tskData)): ?>
         <div class="frmEDIT">
             <div class="modal">
                 <div class="modal__header">
@@ -446,11 +517,14 @@ if (isset($_GET['TSKXXX'])) {
                         <div class="input">
                             <label class="input__label">Status?! :P</label>
                             <select class="input__field" name="status" required id="status">
-                                <option value="" disabled <?= empty($status) ? 'selected' : '' ?>>Please select task status
+                                <option value="" disabled <?= empty($status) ? 'selected' : '' ?>>Please select task
+                                    status
                                 </option>
                                 <option value="pending" <?= $status == 'pending' ? 'selected' : '' ?>>🕒Pending</option>
-                                <option value="completed" <?= $status == 'completed' ? 'selected' : '' ?>>✅ Completed</option>
-                                <option value="in-progress" <?= $status == 'in-progress' ? 'selected' : '' ?>>🚧 In-progress
+                                <option value="completed" <?= $status == 'completed' ? 'selected' : '' ?>>✅ Completed
+                                </option>
+                                <option value="in-progress" <?= $status == 'in-progress' ? 'selected' : '' ?>>🚧
+                                    In-progress
                                 </option>
                             </select>
                         </div>

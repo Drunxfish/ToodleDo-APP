@@ -17,18 +17,18 @@ CREATE TABLE tasks (
     description TEXT,
     start_date DATETIME,
     due_date DATETIME,
-    status ENUM('pending', 'completed', 'in-progress') DEFAULT 'pending',
+    status ENUM('pending', 'completed', 'in-progress', 'overdue') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
-    is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
