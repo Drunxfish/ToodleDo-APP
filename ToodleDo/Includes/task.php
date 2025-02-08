@@ -16,42 +16,60 @@ class Task
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Modify overdue tasks
+    public function changeOverDue($UID)
+    {
+        $overDue = $this->pdo->run("UPDATE tasks SET status = 'overdue' WHERE user_id = :id AND (status = 'in-progress' OR status = 'pending') AND due_date < NOW()", ["id" => $UID])->rowCount() > 0;
+        if ($overDue) {
+            // Feedback
+            $this->pdo->feedback("Yikes.. You've missed your tasks 😒", "information");
+            $this->pdo->pageRef($_SERVER['PHP_SELF']);
+        }
+    }
+
+
+    // Delete overdue after 3 days
+    public function deleteOverdue($UID)
+    {
+        $deleteOverdue = $this->pdo->run("DELETE FROM tasks WHERE user_id = :id AND status = 'overdue' AND updated_at < DATE_SUB(NOW(), INTERVAL 3 DAY)", ["id" => $UID])->rowCount() > 0;
+        if ($deleteOverdue) {
+            // Feedback
+            $this->pdo->feedback("Overdue tasks older than 3 days have been deleted", "information");
+            $this->pdo->pageRef($_SERVER['PHP_SELF']);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Select Completed tasks
     public function selectCompleted($UID)
     {
-        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE status = 'completed' AND user_id = :id", ["id" => $UID])->fetchAll();
+        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, DATE(updated_at) as up_date FROM tasks WHERE status = 'completed' AND user_id = :id", ["id" => $UID])->fetchAll();
     }
 
-    // Select Pending tasks
-    function selectPending($UID)
-    {
-        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE status = 'pending' AND user_id = :id", ["id" => $UID])->fetchAll();
-    }
 
-    // Select In-Progress 
-    function selectInProgress($UID)
+    // Select In-Progress/pending tasks
+    public function selectInProgressPending($UID)
     {
-        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE status = 'in-progress' AND user_id = :id", ["id" => $UID])->fetchAll();
+        return $this->pdo->run("SELECT id, title, description, start_date, due_date, status, created_at, updated_at FROM tasks WHERE (status = 'in-progress' OR status = 'pending') AND user_id = :id", ["id" => $UID])->fetchAll();
     }
 
     // Select Overdue
     public function selectOverdueTasks($UID)
     {
-        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE status = 'in-progress' AND user_id = :id AND due_date < NOW()", ["id" => $UID])->fetchAll();
+        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE status = 'overdue' AND user_id = :id", ["id" => $UID])->fetchAll();
     }
 
-    // Select the 3 most recent tasks 
+    // Select recently interacted tasks that aren't completed
     public function selectRecentTasks($UID)
     {
-        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE user_id = :id ORDER BY updated_at DESC LIMIT 3", ["id" => $UID])->fetchAll();
+        return $this->pdo->run("SELECT id, title, description, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE user_id = :id AND status != 'completed' ORDER BY updated_at DESC LIMIT 3", ["id" => $UID])->fetchAll();
     }
 
     // Select task info
-
     public function selectTaskById($getID, $UID)
     {
         return $this->pdo->run(
-            "SELECT id, title, description, DATE(start_date) as SD, DATE(due_date) AS due, status, created_at, updated_at FROM tasks WHERE id = :getID AND user_id = :id",
+            "SELECT id, title, description, start_date,due_date, status, created_at, updated_at FROM tasks WHERE id = :getID AND user_id = :id",
             [
                 "getID" => $getID,
                 "id" => $UID

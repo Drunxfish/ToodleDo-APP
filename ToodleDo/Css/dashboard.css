@@ -6,10 +6,11 @@
   top: 0;
   left: 0;
   z-index: -99999;
-  background-image: url(./../Assets/Images/forestBackground.png);
+  background-image: url(./../Assets/Images/abst.jpg);
   background-size: cover;
-  background-position: center;
+  /* background-position: center; */
   background-repeat: no-repeat;
+  background-color: wheat;
 }
 
 
@@ -153,9 +154,6 @@
 
 
 
-
-
-
 /* Task Cards */
 .task-card {
   background-color: #ffffff;
@@ -171,10 +169,21 @@
   margin-bottom: 10px;
 }
 
+.task-card span{
+  margin-top: 5vh;
+}
+
+.undeTitleSpan{
+  color: var(--gray);
+  font-size: small;
+}
+
+
 .task-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-top: 20px;
 }
 
 .task-list li::before {
@@ -428,7 +437,9 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 500px;
+  max-width: 700px;
+  padding: 5vh;
+  height: 80vh;
   background-color: rgb(31, 31, 31);
   color: var(--white);
   box-shadow: 0 15px 30px 0 rgba(0, 125, 171, 0.15);
@@ -456,7 +467,7 @@
 .modal__title {
   font-weight: 700;
   font-family: cursive !important;
-  font-size: 1.25rem;
+  font-size: 2.5vh;
 }
 
 .frmBTN {
@@ -468,6 +479,7 @@
 }
 
 .frmBTN--icon {
+  border: none;
   width: 2.5rem;
   height: 2.5rem;
   background-color: transparent;
@@ -497,46 +509,142 @@
   display: flex;
   flex-direction: column;
 }
-
 .input+.input {
-  margin-top: 1.75rem;
+  margin-top: 3vh;
 }
 
 .input__label {
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 1.5vh;
 }
 
 .input__field {
   font-family: cursive !important;
   letter-spacing: .5px;
   display: block;
-  margin-top: 0.5rem;
+  margin-top: 1vh;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: 0.5vh;
   border-left: none;
-  padding: 0.75rem 0.75rem;
+  padding: 1.5vh 1.5vh;
   transition: 0.15s ease;
 }
 
 .input__field:focus {
   outline: none;
   border-color: var(--correct);
-  box-shadow: 0 0 0 1px #007dab, 0 0 0 4px rgba(0, 125, 171, 0.95);
+  box-shadow: 0 0 0 1.3px #007dab, 0 0 0 1.3px rgba(0, 125, 171, 0.95);
 }
 
 .input__field--textarea {
   resize: none;
   overflow: auto;
-  min-height: 100px;
+  height: 20vh;
   max-width: 100%;
 }
 
 .input__description {
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+  font-size: 1.5vh;
+  margin-top: 1vh;
   color: var(--gray);
 }
+
+
+
+
+/* Notifications  */
+.notifsView{
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 99999999999999;
+  backdrop-filter: blur(15px);
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all 1s ease-in-out;
+}
+
+.notifWrapper{
+  min-height: 80vh;
+  width: 500px;
+  border-radius: 2vh;
+  background-image: url(./../Assets/Images/abst.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+.notifsTitle{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--navy-blue);
+  color: var(--white);
+  box-shadow: 0 15px 30px 0 rgba(0, 125, 171, 0.15);
+  transition: 0.3s ease;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+
+.notifsBox{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 5vh;
+  color: var(--black);
+  box-shadow: 0 15px 30px 0 rgba(0, 125, 171, 0.15);
+  transition: 0.3s ease;
+  gap: 2vh;
+  border-radius: 1vh;
+}
+
+
+
+.notif{
+  background-color: var(--gray);
+  color: var(--black);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1vh;
+  border-radius: inherit;
+}
+
+.noNotifs{
+  width: 100%;
+  height: 75vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--completed);
+  background-color: var(--white);
+  font-size: 2.5vh;
+  font-weight: bolder;
+  transition: 0.3s ease;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+/* ------------------------------  */
+
+
+
+
+
+
+
+
 
 
 
@@ -548,9 +656,14 @@
   .tskCurrent {
     width: 100%;
     margin: 0;
-    min-height: fit-content;
+    min-height: fit-content;   
   }
 
+  .tskContainer{
+    background-image: url(./../Assets/Images/abst.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
 
   .gCalendar {
     height: 400px;
@@ -571,5 +684,14 @@
   .tskContainer .welcome {
     border-radius: 0;
     width: 100%;
+  }
+
+
+  /* // form modal */
+  .modal {
+    width: 100%;
+    /* height: 100vh; */
+    padding: 0;
+    margin: 0;
   }
 }

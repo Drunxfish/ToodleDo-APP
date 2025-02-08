@@ -11,6 +11,7 @@ Object.assign(preloader.style, {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    userSelect: 'none',
     zIndex: '99999999999999999999999999999999999999999999999999999999999'
 });
 

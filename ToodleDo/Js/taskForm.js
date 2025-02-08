@@ -6,7 +6,6 @@ const frmEditct = document.querySelector('.frmEDIT');
 const modal = document.querySelector('.modal');
 
 
-
 // closes form
 formCloserBTN.forEach(element => {
     element.addEventListener('click', (e) => {
