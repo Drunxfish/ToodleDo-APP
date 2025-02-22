@@ -460,8 +460,9 @@
 }
 
 .taskStatus {
-  font-size: 0.9em;
-  padding: 5px 10px;
+  font-size: 1.7vh;
+  padding: .3vh .3vh;
+  margin: .5vh;
   border-radius: 3px;
   background-color: #ffcc00;
   color: #fff;
