@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $userDB->pdo->feedback("This email address is unavailable. Please choose a different one or log in to your account.", "information");
         $userDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
-
+    
     // email validation (extra)
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         # feedback/redirect

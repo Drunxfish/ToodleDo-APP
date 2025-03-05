@@ -55,7 +55,7 @@ class User
     // returns email or false boolean
     public function selectEmail($email)
     {
-        return $this->pdo->run("SELECT email FROM users WHERE email = :email", ['email' => $email])->fetch();
+        return $this->pdo->run("SELECT email FROM users WHERE email = :email", ['email' => $email])->rowCount();
     }
 
 }

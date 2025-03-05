@@ -38,6 +38,19 @@ class Task
         return $messages[array_rand($messages)];
     }
 
+    private function randInProgressMsg()
+    {
+        $messages = [
+            "🚀 Your tasks have started! They're now in progress. Keep up the momentum! 🔥",
+            "⏳ Time to work! Some tasks have started and are now in progress. Stay focused! 💪",
+            "🔄 Tasks updated! Some pending tasks are now in progress. Let's get things done! ✅",
+            "🔥 Keep going! Some tasks have moved to in progress. You're on the right track! 🚀",
+            "⚡ Action time! Your pending tasks are now in progress. Keep pushing forward! 🎯"
+        ];
+        return $messages[array_rand($messages)];
+    }
+
+
     public function greetUser($username)
     {
         if (!isset($_SESSION['greeting'])) {
@@ -120,6 +133,16 @@ class Task
         }
     }
 
+    // Changing pending tasks to in-progress
+    public function changeInprogress($UID)
+    {
+        $inProgress = $this->pdo->run("UPDATE tasks SET status = 'in-progress' WHERE user_id = :id AND status = 'pending' AND start_date <= NOW()", ["id" => $UID])->rowCount() > 0;
+        if ($inProgress) {
+            // Feedback
+            $this->createNotification($UID, "Task In-progress", $this->randInProgressMsg());
+            $this->pdo->pageRef($_SERVER['PHP_SELF']);
+        }
+    }
 
     // Delete overdue after 3 days
     public function deleteOverdue($UID)
@@ -138,9 +161,23 @@ class Task
 
 
     // Select Completed tasks
+    // if task marked as completed before its initial start_date then completion_time is returned as NULL
     public function selectCompleted($UID)
     {
-        return $this->pdo->run("SELECT id, title, description, DATE_FORMAT(due_date, '%Y-%m-%d') AS due_date, DATE_FORMAT(due_date, '%H:%i') AS due_time, status, created_at, DATE_FORMAT(updated_at, '%Y-%m-%d') AS up_date, DATE_FORMAT(updated_at, '%H:%i') AS up_time, TIMESTAMPDIFF(MINUTE, created_at, updated_at) AS completion_time FROM tasks WHERE status = 'completed' AND user_id = :id", ["id" => $UID])->fetchAll();
+        return $this->pdo->run("
+        SELECT id, title, description, 
+               DATE_FORMAT(due_date, '%Y-%m-%d') AS due_date, 
+               DATE_FORMAT(due_date, '%H:%i') AS due_time, 
+               status, created_at, 
+               DATE_FORMAT(updated_at, '%Y-%m-%d') AS up_date, 
+               DATE_FORMAT(updated_at, '%H:%i') AS up_time, 
+               CASE 
+                   WHEN updated_at < start_date THEN NULL
+                   ELSE TIMESTAMPDIFF(MINUTE, start_date, updated_at) 
+               END AS completion_time 
+        FROM tasks 
+        WHERE status = 'completed' AND user_id = :id
+    ", ["id" => $UID])->fetchAll();
     }
 
 

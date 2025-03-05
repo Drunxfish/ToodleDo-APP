@@ -18,6 +18,10 @@ $recent = $taskDB->selectRecentTasks($_SESSION['id']);
 // Clearing overdue tasks(order matters)
 $taskDB->deleteOverdue($_SESSION['id']); // DELETES overdue tasks 
 $taskDB->changeOverDue($_SESSION['id']); // Changes status of overdue tasks
+$taskDB->changeInprogress($_SESSION['id']); // Changes status of pending tasks to in-progress
+
+
+
 
 // Form handling
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -253,7 +257,8 @@ if (isset($_GET['NTFIDXD'])) {
                     <div class="task-card upcoming">
                         <?php if (isset($inProgress) && $inProgress): ?>
                             <h3>📅 Upcoming Tasks</h3>
-                            <span class="undeTitleSpan">Don't forget to change pending tasks to in-progress😎</span>
+                            <span class="undeTitleSpan">Pending tasks will automatically change to In-progress when task
+                                start date arrives 😎</span>
                             <table class="inProgressTSK-table">
                                 <thead>
                                     <tr>
@@ -272,12 +277,12 @@ if (isset($_GET['NTFIDXD'])) {
                                             <td>
                                                 <select class="taskStatusSelect <?= htmlspecialchars($Ptsk['status']) ?>"
                                                     TSKIDXXXXXXXXXX="<?= htmlspecialchars($Ptsk['id']) ?>">
-                                                    <option value="in-progress" <?= $Ptsk['status'] == 'in-progress' ? 'selected' : '' ?>>
-                                                        In-progress</option>
-                                                    <option value="pending" <?= $Ptsk['status'] == 'pending' ? 'selected' : '' ?>>
-                                                        Pending</option>
-                                                    <option value="completed" <?= $Ptsk['status'] == 'completed' ? 'selected' : '' ?>>
-                                                        Completed</option>
+                                                    <?php if ($Ptsk['status'] == 'in-progress'): ?>
+                                                        <option value="in-progress" selected disabled>In-progress</option>
+                                                    <?php else: ?>
+                                                        <option value="pending" <?= $Ptsk['status'] == 'pending' ? 'selected disabled' : '' ?>>Pending</option>
+                                                    <?php endif; ?>
+                                                    <option value="completed" <?= $Ptsk['status'] == 'completed' ? 'selected disabled' : '' ?>>Completed</option>
                                                     <option value="delete">Delete</option>
                                                 </select>
                                             </td>
@@ -311,7 +316,8 @@ if (isset($_GET['NTFIDXD'])) {
                                             <td><?= htmlspecialchars($tskC['title']) ?></td>
                                             <td><?= htmlspecialchars($tskC['up_date']) ?></td>
                                             <td><?= htmlspecialchars($tskC['up_time']) ?></td>
-                                            <td><?= htmlspecialchars($tskC['completion_time']) ?> minutes</td>
+                                            <td><?= htmlspecialchars($tskC['completion_time']) == null || htmlspecialchars($tskC['completion_time']) == 0 ? 'N/A' : htmlspecialchars($tskC['completion_time']) . ' minutes' ?>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -420,7 +426,6 @@ if (isset($_GET['NTFIDXD'])) {
                         <label class="input__label">Status</label>
                         <select class="input__field" name="status" id="status" required>
                             <option value="pending">🕒Pending</option>
-                            <option value="completed">✅ Completed</option>
                             <option value="in-progress" selected>🚧 In-progress</option>
                         </select>
                     </div>
