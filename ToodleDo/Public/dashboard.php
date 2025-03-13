@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_POST['tskDescription'],
                 $_POST['startDate'],
                 $_POST['dueDate'],
-                $_POST['status']
+                'pending'
             );
 
             // Feedback
@@ -198,7 +198,7 @@ if (isset($_GET['NTFIDXD'])) {
                     </a>
                     <!-- Dropdown Menu -->
                     <ul class="dropdown-menu">
-                        <li class="nav-item"><a href="taskManager.php" class="nav-link dropdown-link">All Tasks</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link dropdown-link">All Tasks</a></li>
                         <li class="nav-item formSlider"><a class="nav-link dropdown-link">New Task</a></li>
                         <li class="nav-item"><a href="taskArchive.php" class="nav-link dropdown-link">Completed</a>
                         </li>
@@ -392,56 +392,48 @@ if (isset($_GET['NTFIDXD'])) {
         </div>
     </div>
     <div class="frmContainer">
-        <div class="modal">
-            <div class="modal__header">
-                <span class="modal__title">New Task 📝</span>
-                <button class="frmBTN frmBTN--icon formCloserBTN">
-                    <svg width="24" viewBox="0 0 24 24" height="24" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="none" d="M0 0h24v24H0V0z"></path>
-                        <path
-                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
-                        </path>
-                    </svg>
-                </button>
+        <form method="post" class="addFRMC">
+            <div class="title">
+                <span>📝 New Task </span>
+                <span class="material-symbols-rounded formCloserBTN">
+                    close
+                </span>
             </div>
-            <form method="POST">
-                <div class="modal__body">
-                    <div class="input">
-                        <label class="input__label">Task title</label>
-                        <input class="input__field" type="text" name="tskTitle" placeholder="Go to gym" required>
-                        <p class="input__description">Try something short and descriptive</p>
-                    </div>
-                    <div class="input">
-                        <label class="input__label">Start-Date</label>
-                        <input class="input__field" min="<?= date('Y-m-d\TH:i') ?>" type="datetime-local"
-                            name="startDate" required>
-                    </div>
-                    <div class="input">
-                        <label class="input__label">Deadline</label>
-                        <input class="input__field" min="<?= date('Y-m-d\TH:i') ?>" type="datetime-local" name="dueDate"
-                            required>
-                        <p class="input__description">Tip: set realistic deadlines :P</p>
-                    </div>
-                    <div class="input">
-                        <label class="input__label">Status</label>
-                        <select class="input__field" name="status" id="status" required>
-                            <option value="pending">🕒Pending</option>
-                            <option value="in-progress" selected>🚧 In-progress</option>
-                        </select>
-                    </div>
-                    <div class="input">
-                        <label class="input__label">Description</label>
-                        <textarea rows="4" cols="50" class="input__field input__field--textarea" name="tskDescription"
-                            placeholder="Time to sweat it out! Get to the gym and crush your workout."
-                            required></textarea>
-                        <p class="input__description">Give your task a good description</p>
-                    </div>
+            <div class="frmBody">
+                <div class="inpGrp">
+                    <span class="material-symbols-rounded">
+                        keep
+                    </span>
+                    <input type="text" name="tskTitle" placeholder="Task name" required>
                 </div>
-                <div class="modal__footer">
-                    <button type="submit" class="frmBTN frmBTN--primary" name="addtsk">Create Task</button>
+                <div class="inpGrp">
+                    <span class="material-symbols-rounded">
+                        calendar_month
+                    </span>
+                    <input class="input__field" min="<?= date('Y-m-d\TH:i') ?>" value="<?= date('Y-m-d\TH:i') ?>"
+                        type="datetime-local" name="startDate" required>
                 </div>
-            </form>
-        </div>
+                <div class="inpGrp">
+                    <span class="material-symbols-rounded">
+                        event_upcoming
+                    </span>
+                    <input class="input__field" min="<?= date('Y-m-d\TH:i', strtotime('+1 day')) ?>"
+                        value="<?= date('Y-m-d\TH:i', strtotime('+1 day')) ?>" type="datetime-local" name="dueDate"
+                        required>
+                </div>
+                <div class="inpGrp ingrpSpec">
+                    <span class="material-symbols-rounded">
+                        description
+                    </span>
+                    <textarea rows="4" cols="50" class="input__field input__field--textarea" name="tskDescription"
+                        placeholder="Task description example: Time to sweat it out! Get to the gym and crush your workout."
+                        required></textarea>
+                </div>
+                <div class="inpGrp btnfprio">
+                    <button type="submit" class="frmBTN btn" name="addtsk">Create Task</button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="notifsView">
@@ -459,12 +451,9 @@ if (isset($_GET['NTFIDXD'])) {
                     <?php endif; ?>
                 </div>
                 <button class="notifsCloserBtn frmBTN--icon">
-                    <svg width="24" viewBox="0 0 24 24" height="24" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="none" d="M0 0h24v24H0V0z"></path>
-                        <path
-                            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
-                        </path>
-                    </svg>
+                    <span class="material-symbols-rounded">
+                        close
+                    </span>
                 </button>
             </div>
             <!-- display notifications -->
@@ -488,63 +477,63 @@ if (isset($_GET['NTFIDXD'])) {
 
     <?php if (isset($_GET['TSKXXX']) && $_GET['TSKXXX'] && isset($tskData)): ?>
         <div class="frmEDIT">
-            <div class="modal">
-                <div class="modal__header">
-                    <span class="modal__title">Edit Task 📝</span>
-                    <button class="frmBTN frmBTN--icon formCloserBTN">
-                        <svg width="24" viewBox="0 0 24 24" height="24" xmlns="http://www.w3.org/2000/svg">
-                            <path fill="none" d="M0 0h24v24H0V0z"></path>
-                            <path
-                                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
-                            </path>
-                        </svg>
-                    </button>
+            <form method="post" class="editFRMC ">
+                <div class="title">
+                    <span>📝 Edit Task </span>
+                    <span class="material-symbols-rounded formCloserBTN">
+                        close
+                    </span>
                 </div>
-                <form method="POST">
-                    <div class="modal__body">
-                        <div class="input">
-                            <label class="input__label">New title</label>
-                            <input class="input__field" type="text" name="tskTitle" placeholder="Go to gym"
-                                value="<?= htmlspecialchars($tskData['title']) ?>" required>
-                            <p class="input__description">Try something short and descriptive</p>
-                        </div>
-                        <div class="input">
-                            <label class="input__label">New Start-Date</label>
-                            <input class="input__field" min="<?= date('Y-m-d\TH:i') ?>" type="datetime-local"
-                                name="startDate" value="<?= htmlspecialchars($tskData['start_date']) ?>" required>
-                        </div>
-                        <div class="input">
-                            <label class="input__label">New Deadline</label>
-                            <input class="input__field" min="<?= date('Y-m-d\TH:i') ?>" type="datetime-local" name="dueDate"
-                                value="<?= htmlspecialchars($tskData['due_date']) ?>" required>
-                            <p class="input__description">Tip: set realistic deadlines :P</p>
-                        </div>
-                        <div class="input">
-                            <label class="input__label">Status?! :P</label>
-                            <select class="input__field" name="status" required id="status">
-                                <option value="" disabled <?= empty($status) ? 'selected' : '' ?>>Please select task
-                                    status
-                                </option>
-                                <option value="pending" <?= $status == 'pending' ? 'selected' : '' ?>>🕒Pending</option>
-                                <option value="completed" <?= $status == 'completed' ? 'selected' : '' ?>>✅ Completed
-                                </option>
-                                <option value="in-progress" <?= $status == 'in-progress' ? 'selected' : '' ?>>🚧
-                                    In-progress
-                                </option>
-                            </select>
-                        </div>
-                        <div class="input">
-                            <label class="input__label">New Description</label>
-                            <textarea rows="4" cols="50" class="input__field input__field--textarea"
-                                name="tskDescription"><?= htmlspecialchars($tskData['description']) ?></textarea>
-                            <p class="input__description">Give your task a good description</p>
-                        </div>
+                <div class="frmBody">
+                    <div class="inpGrp">
+                        <span class="material-symbols-rounded">
+                            keep
+                        </span>
+                        <input class="input__field" type="text" name="tskTitle" placeholder="Go to gym"
+                            value="<?= htmlspecialchars($tskData['title']) ?>" required>
                     </div>
-                    <div class="modal__footer">
-                        <button type="submit" class="frmBTN frmBTN--primary" name="edittsk">Edit Task</button>
+                    <div class="inpGrp">
+                        <span class="material-symbols-rounded">
+                            calendar_month
+                        </span>
+                        <input class="input__field" min="<?= date('Y-m-d\TH:i') ?>" type="datetime-local" name="startDate"
+                            value="<?= htmlspecialchars($tskData['start_date']) ?>" required>
                     </div>
-                </form>
-            </div>
+                    <div class="inpGrp">
+                        <span class="material-symbols-rounded">
+                            event_upcoming
+                        </span>
+                        <input class="input__field" min="<?= date('Y-m-d\TH:i') ?>" type="datetime-local" name="dueDate"
+                            value="<?= htmlspecialchars($tskData['due_date']) ?>" required>
+                    </div>
+                    <div class="inpGrp">
+                        <span class="material-symbols-rounded">
+                            pending_actions
+                        </span>
+                        <select name="status" required id="status">
+                            <option value="" disabled <?= empty($status) ? 'selected' : '' ?>>Please select task
+                                status
+                            </option>
+                            <option value="pending" <?= $status == 'pending' ? 'selected' : '' ?>>🕒Pending</option>
+                            <option value="completed" <?= $status == 'completed' ? 'selected' : '' ?>>✅ Completed
+                            </option>
+                            <option value="in-progress" <?= $status == 'in-progress' ? 'selected' : '' ?>>🚧
+                                In-progress
+                            </option>
+                        </select>
+                    </div>
+                    <div class="inpGrp ingrpSpec">
+                        <span class="material-symbols-rounded ingrpSpecMa">
+                            settings
+                        </span>
+                        <textarea rows="4" cols="50" class="input__field input__field--textarea"
+                            name="tskDescription"><?= htmlspecialchars($tskData['description']) ?></textarea>
+                    </div>
+                    <div class="inpGrp btnfprio">
+                        <button type="submit" class="frmBTN btn" name="edittsk">Edit Task</button>
+                    </div>
+                </div>
+            </form>
         </div>
     <?php endif; ?>
 

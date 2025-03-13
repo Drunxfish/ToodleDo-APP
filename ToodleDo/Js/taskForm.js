@@ -3,28 +3,26 @@ const formSlider = document.querySelectorAll('.formSlider');
 const formCloserBTN = document.querySelectorAll('.formCloserBTN');
 const frmContainer = document.querySelector('.frmContainer');
 const frmEditct = document.querySelector('.frmEDIT');
-const modal = document.querySelector('.modal');
+const frmContent = document.querySelector('.addFRMC');
 
-
-// closes form
-formCloserBTN.forEach(element => {
-    element.addEventListener('click', (e) => {
-        frmContainer.style.display = 'none';
-        document.body.style.overflow = '';
-        window.location.href = 'dashboard.php';
-    });
-})
 
 
 // opens form with animation
 formSlider.forEach(element => {
     element.addEventListener('click', () => {
         frmContainer.style.display = 'flex';
-        frmContainer.style.opacity = 0;
+        frmContainer.classList.add('fade-In');
+
         setTimeout(() => {
-            frmContainer.style.opacity = 1;
-            modal.style.transform = "translateY(0%)";
-        }, 10);
+            frmContent.style.transform = "translateY(0%)";
+        }, 500);
         document.body.style.overflow = 'hidden';
     });
 });
+
+// closes form
+formCloserBTN.forEach(element => {
+    element.addEventListener('click', () => {
+        window.location.href = 'dashboard.php';
+    });
+})
