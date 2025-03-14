@@ -163,8 +163,9 @@ class Task
     // Select Completed tasks
     // if task marked as completed before its initial start_date then completion_time is returned as NULL
 
-    public function selectAll($UID){
-        return $this->pdo->run("SELECT * FROM tasks WHERE user_id = :id", ['id' => $UID])->fetchAll();
+    public function selectAll($UID)
+    {
+        return $this->pdo->run("SELECT * FROM tasks  WHERE user_id = :id ORDER BY updated_at DESC", ['id' => $UID])->fetchAll();
     }
 
 

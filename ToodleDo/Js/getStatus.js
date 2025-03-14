@@ -7,7 +7,7 @@ document.querySelectorAll('.taskStatusSelect').forEach(select => {
         previousValue = this.value;
     });
 
-    
+
     // Redirects to the same page with updated GET parameters
     select.addEventListener('change', function () {
         let taskId = this.getAttribute('TSKIDXXXXXXXXXX');

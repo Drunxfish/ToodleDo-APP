@@ -148,6 +148,24 @@
   padding: 3vh;
 }
 
+.ovDispBTN {
+  transition: .2s ease-in-out;
+  margin-left: 10px;
+  padding: 0 10px;
+  border-radius: 2px;
+  font-family: cursive;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--bright-yellow);
+  font-weight: lighter;
+  border: none;
+  outline: none;
+
+  &&:hover {
+    transform: translateY(-10%);
+    opacity: .9;
+  }
+}
 
 
 .tskOverview .tskS {
@@ -910,6 +928,18 @@
   background-color: white;
 }
 
+.taskDisplayCenterDum {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  color: var(--completed);
+  background-color: var(--white);
+  font-size: 2.5vh;
+  font-weight: bolder;
+}
 
 /* header */
 .taskDisplayTitle {
@@ -921,6 +951,23 @@
   align-items: center;
   justify-content: space-between;
   padding: 30px;
+  position: sticky;
+  top: 0;
+
+  .spanGrp {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 70%;
+
+    i {
+      opacity: .92;
+      color: var(--gray);
+      font-size: medium;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
 
   span:nth-child(1) {
     font-size: x-large;
@@ -948,9 +995,33 @@
   justify-content: center;
   width: 80%;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  color: var(--black);
   padding: 10px;
-  margin-top: 20px;
+  margin: 20px 20px;
   gap: 5px;
+
+  h4 {
+    color: var(--navy-blue);
+  }
+
+  .in-progress {
+    color: var(--upcoming);
+  }
+
+  .completed {
+    color: var(--completed);
+  }
+
+  .pending,
+  .archived {
+    color: var(--gray);
+  }
+
+  p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
 
   .tskGroupButtons {
     display: flex;
@@ -958,7 +1029,7 @@
     align-items: flex-start;
     gap: 10px;
 
-    button {
+    a button {
       transition: .2s ease-in-out;
       padding: 0px 20px;
       background-color: var(--navy-blue);
@@ -967,13 +1038,14 @@
       color: var(--white);
       padding: 5px 10px;
       border-radius: 5px;
+      cursor: pointer;
 
       &&:hover {
         transform: translateY(-10%);
       }
     }
 
-    button:nth-child(2) {
+    .tskDeleteGrp {
       background-color: var(--overdue);
     }
   }

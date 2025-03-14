@@ -14,19 +14,6 @@ class User
         $this->pdo = new Database();
     }
 
-    public function randWelcomeMsg()
-    {
-        $greet = [
-            "Welcome to your new task manager! 🎉",
-            "Hello! Welcome to your new task manager 🎊",
-            "Welcome to your new task manager! 🎈",
-            "Hello! Welcome to your new task manager 🎉",
-            "Welcome to your new task manager! 🎊"
-        ];
-
-        return $greet[array_rand($greet)];
-    }
-
 
     // function to handle user registrations
     public function signupUser($username, $email, $password)

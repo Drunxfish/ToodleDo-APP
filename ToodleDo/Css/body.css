@@ -7,14 +7,6 @@
     box-sizing: border-box;
 }
 
-/* 
-body {
-    background-color: var(--white);
-    color: var(--black);
-    min-height: 100vh;
-} */
-
-
 ::-webkit-scrollbar {
     width: 0.4vw;
     opacity: 0.1;

@@ -24,7 +24,7 @@ if (notifCloser) {
             notifContainer.style.scale = '0';
             setTimeout(() => {
                 notifContainer.style.display = 'none';
-                document.body.style.overflow = 'auto';
+                document.body.style.overflow = '';
             }, 1300);
         }, 800);
     });

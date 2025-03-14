@@ -6,6 +6,7 @@ require './../Includes/task.php';
 
 // sends logged users to dashboard; if not authorised
 $taskDB->pdo->sendAway();
+
 $notifs = $taskDB->selectNotifications($_SESSION['id']);
 $wlcm = $taskDB->greetUser($_SESSION['username']);
 
@@ -123,8 +124,12 @@ if (isset($_GET['TSKIDXXXXXXXXXXXXXXXXXXXXXXXXXX']) && isset($_GET['TSKSTSXXXXXX
 if (isset($_GET['TSKXXX']) && $_GET['TSKXXX']) {
     try {
         $tskData = $taskDB->selectTaskById($_GET['TSKXXX'], $_SESSION['id']);
+
+        if (!$tskData) {
+            throw new Exception("User ID cannot be empty!");
+        }
         $status = $tskData['status'];
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         // echo $e->getMessage();
         // Feedback/redirect
         $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
@@ -201,7 +206,6 @@ if (isset($_GET['NTFIDXD'])) {
                     <ul class="dropdown-menu">
                         <li class="nav-item"><a class="nav-link dropdown-link tskDispTr">All Tasks</a></li>
                         <li class="nav-item formSlider"><a class="nav-link dropdown-link">New Task</a></li>
-                        <li class="nav-item"><a href="taskArchive.php" class="nav-link dropdown-link">Completed</a>
                         </li>
                     </ul>
                 </li>
@@ -253,6 +257,7 @@ if (isset($_GET['NTFIDXD'])) {
             <div class="tskOverview">
                 <div class="tskHeader">
                     <h3>Task Overview</h3>
+                    <span class="undeTitleSpan">✏️ Check descriptions or make edits in</span>
                 </div>
                 <div class="tskS">
                     <div class="task-card upcoming">
@@ -353,6 +358,9 @@ if (isset($_GET['NTFIDXD'])) {
             <div class="tskCurrent">
                 <div class="tskHeader">
                     <h3>Recent Tasks</h3>
+                    <span class="undeTitleSpan">
+                        📋 Not seeing it? Browse all tasks: <button class="tskDispTr ovDispBTN">Overview</button>
+                    </span>
                 </div>
                 <div class="tskBox">
                     <?php if (isset($recent) && $recent): ?>
@@ -477,6 +485,9 @@ if (isset($_GET['NTFIDXD'])) {
     </div>
 
     <?php if (isset($_GET['TSKXXX']) && $_GET['TSKXXX'] && isset($tskData)): ?>
+        <script>
+            document.body.style.overflow = 'hidden';
+        </script>
         <div class="frmEDIT">
             <form method="post" class="editFRMC ">
                 <div class="title">
@@ -537,25 +548,40 @@ if (isset($_GET['NTFIDXD'])) {
             </form>
         </div>
     <?php endif; ?>
+    <script>
+        document.body.style.overflow = 'hidden';
+    </script>
     <div class="tasks-display">
         <div class="tasksWrapper">
             <div class="taskDisplayTitle">
-                <span>📝 All tasks </span>
+                <div class="spanGrp">
+                    <span>📖 Task History & Active List </span>
+                    <i>🎯 Manage Your Tasks – Active & Archived</i>
+                </div>
                 <span class="material-symbols-rounded tskCloseTr">
                     close
                 </span>
             </div>
-            <div class="tskGroup">
-                <h4>TEST</h4>
-                <h5>Status: in-progress</h5>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, enim praesentium asperiores hic
-                    iure ipsum a deleniti autem sint ipsam consequatur numquam tempore itaque maiores, incidunt,
-                    eligendi atque corrupti eum?</p>
-                <div class="tskGroupButtons">
-                    <button>Edit</button>
-                    <button>Delete</button>
-                </div>
-            </div>
+            <?php if (isset($allTasks) && count($allTasks) > 0): ?>
+                <?php foreach ($allTasks as $dataKey): ?>
+                    <div class="tskGroup">
+                        <h4><?= htmlspecialchars($dataKey['title']) ?></h4>
+                        <h5 class="<?= htmlspecialchars($dataKey['status']) ?>"><?= htmlspecialchars($dataKey['status']) ?></h5>
+                        <hr>
+                        <p><?= htmlspecialchars($dataKey['description']) ?></p>
+                        <div class="tskGroupButtons">
+                            <?php if ($dataKey['status'] == 'in-progress' || $dataKey['status'] == 'pending'): ?>
+                                <a href="?TSKXXX=<?= htmlspecialchars($dataKey['id']) ?>"><button
+                                        class="tskEditGrp">Edit</button></a>
+                            <?php endif; ?>
+                            <a href="?TSKDLXXX=<?= htmlspecialchars($dataKey['id']) ?>"><button class="tskDeleteGrp"
+                                    name="TSKDLXXXBTN">Delete</button></a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="taskDisplayCenterDum">👀 No tasks found! Add a task to get started</p>
+            <?php endif; ?>
         </div>
     </div>
     <!-- Fancy Feedback  -->

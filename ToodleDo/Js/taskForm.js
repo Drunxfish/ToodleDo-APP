@@ -10,19 +10,21 @@ const frmContent = document.querySelector('.addFRMC');
 // opens form with animation
 formSlider.forEach(element => {
     element.addEventListener('click', () => {
+        document.body.style.overflow = 'hidden';
         frmContainer.style.display = 'flex';
         frmContainer.classList.add('fade-In');
-
         setTimeout(() => {
             frmContent.style.transform = "translateY(0%)";
         }, 500);
-        document.body.style.overflow = 'hidden';
     });
 });
 
 // closes form
 formCloserBTN.forEach(element => {
     element.addEventListener('click', () => {
+        document.body.style.overflow = '';
         window.location.href = 'dashboard.php';
     });
 })
+
+
