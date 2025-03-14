@@ -10,10 +10,13 @@ $notifs = $taskDB->selectNotifications($_SESSION['id']);
 $wlcm = $taskDB->greetUser($_SESSION['username']);
 
 // Get all sorts of tasks/notifications
+$allTasks = $taskDB->selectAll($_SESSION['id']);
 $completed = $taskDB->selectCompleted($_SESSION['id']);
 $inProgress = $taskDB->selectInProgressPending($_SESSION['id']);
 $overDueTasks = $taskDB->selectOverdueTasks($_SESSION['id']);
 $recent = $taskDB->selectRecentTasks($_SESSION['id']);
+
+
 
 // Clearing overdue tasks(order matters)
 $taskDB->deleteOverdue($_SESSION['id']); // DELETES overdue tasks 
@@ -141,9 +144,6 @@ if (isset($_GET['NTFIDXD'])) {
     }
 }
 
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -161,6 +161,7 @@ if (isset($_GET['NTFIDXD'])) {
     <script src="./../Js/taskForm.js" defer></script>
     <script src="./../Js/notifications.js" defer></script>
     <script src="./../Js/getStatus.js" defer></script>
+    <script src="./../Js/taskView.js" defer></script>
     <script type="text/javascript" src="./../Js/toastFeedback.js" defer></script>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -198,7 +199,7 @@ if (isset($_GET['NTFIDXD'])) {
                     </a>
                     <!-- Dropdown Menu -->
                     <ul class="dropdown-menu">
-                        <li class="nav-item"><a href="#" class="nav-link dropdown-link">All Tasks</a></li>
+                        <li class="nav-item"><a class="nav-link dropdown-link tskDispTr">All Tasks</a></li>
                         <li class="nav-item formSlider"><a class="nav-link dropdown-link">New Task</a></li>
                         <li class="nav-item"><a href="taskArchive.php" class="nav-link dropdown-link">Completed</a>
                         </li>
@@ -536,7 +537,27 @@ if (isset($_GET['NTFIDXD'])) {
             </form>
         </div>
     <?php endif; ?>
-
+    <div class="tasks-display">
+        <div class="tasksWrapper">
+            <div class="taskDisplayTitle">
+                <span>📝 All tasks </span>
+                <span class="material-symbols-rounded tskCloseTr">
+                    close
+                </span>
+            </div>
+            <div class="tskGroup">
+                <h4>TEST</h4>
+                <h5>Status: in-progress</h5>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, enim praesentium asperiores hic
+                    iure ipsum a deleniti autem sint ipsam consequatur numquam tempore itaque maiores, incidunt,
+                    eligendi atque corrupti eum?</p>
+                <div class="tskGroupButtons">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Fancy Feedback  -->
     <div id="toastbox uflp">
         <?php if (isset($_SESSION['userFeedback'])): ?>
