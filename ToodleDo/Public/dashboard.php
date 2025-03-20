@@ -485,9 +485,6 @@ if (isset($_GET['NTFIDXD'])) {
     </div>
 
     <?php if (isset($_GET['TSKXXX']) && $_GET['TSKXXX'] && isset($tskData)): ?>
-        <script>
-            document.body.style.overflow = 'hidden';
-        </script>
         <div class="frmEDIT">
             <form method="post" class="editFRMC ">
                 <div class="title">
@@ -548,9 +545,6 @@ if (isset($_GET['NTFIDXD'])) {
             </form>
         </div>
     <?php endif; ?>
-    <script>
-        document.body.style.overflow = 'hidden';
-    </script>
     <div class="tasks-display">
         <div class="tasksWrapper">
             <div class="taskDisplayTitle">
