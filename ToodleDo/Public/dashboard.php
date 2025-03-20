@@ -107,10 +107,7 @@ if (isset($_GET['TSKIDXXXXXXXXXXXXXXXXXXXXXXXXXX']) && isset($_GET['TSKSTSXXXXXX
             $taskDB->deleteTask($tskIDDD, $_SESSION['id']);
             break;
         case 'in-progress':
-            $taskDB->changeTaskStatus($_SESSION['id'], $tskIDDD, $tskSTSTS);
-            break;
         case 'pending':
-            $taskDB->changeTaskStatus($_SESSION['id'], $tskIDDD, $tskSTSTS);
         case 'completed':
             $taskDB->changeTaskStatus($_SESSION['id'], $tskIDDD, $tskSTSTS);
             break;
@@ -126,7 +123,7 @@ if (isset($_GET['TSKXXX']) && $_GET['TSKXXX']) {
         $tskData = $taskDB->selectTaskById($_GET['TSKXXX'], $_SESSION['id']);
 
         if (!$tskData) {
-            throw new Exception("User ID cannot be empty!");
+            throw new Exception("Task couldn't be retrieved");
         }
         $status = $tskData['status'];
     } catch (Exception $e) {
@@ -206,15 +203,15 @@ if (isset($_GET['NTFIDXD'])) {
                     <ul class="dropdown-menu">
                         <li class="nav-item"><a class="nav-link dropdown-link tskDispTr">All Tasks</a></li>
                         <li class="nav-item formSlider"><a class="nav-link dropdown-link">New Task</a></li>
-                        </li>
-                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link notifViewBtn">
-                        <span class="material-symbols-rounded">notifications</span>
-                        <span class="nav-label">Notifications</span>
-                    </a>
-                </li>
+            </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link notifViewBtn">
+                    <span class="material-symbols-rounded">notifications</span>
+                    <span class="nav-label">Notifications</span>
+                </a>
+            </li>
             </ul>
             <!-- Secondary Bottom Nav -->
             <ul class="nav-list secondary-nav">
@@ -573,8 +570,8 @@ if (isset($_GET['NTFIDXD'])) {
                         </div>
                     </div>
                 <?php endforeach; ?>
-                <?php else: ?>
-                    <p class="taskDisplayCenterDum">👀 No tasks found! Add a task to get started</p>
+            <?php else: ?>
+                <p class="taskDisplayCenterDum">👀 No tasks found! Add a task to get started</p>
             <?php endif; ?>
         </div>
     </div>

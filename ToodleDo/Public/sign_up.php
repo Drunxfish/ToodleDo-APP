@@ -5,21 +5,21 @@ require_once './../Includes/user.php';
 session_start();
 
 
-// sends logged users to dashboard
+// Sends logged users to dashboard
 $userDB->pdo->sendToDashboard();
 
 
-// handles form request
+// Handles form request
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // get email
+    // Get email
     if ($userDB->selectEmail($_POST['email'])) {
         # feedback/redirect
         $userDB->pdo->feedback("This email address is unavailable. Please choose a different one or log in to your account.", "information");
         $userDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
-    
-    // email validation (extra)
+
+    // Email validation (extra)
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         # feedback/redirect
         $userDB->pdo->feedback("Invalid email address. Please enter a valid email address.", "cross");
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 
-    // try to submitting form
+    // Sign up user
     try {
         $userDB->signupUser(
             $_POST['username'],
@@ -37,9 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         # feedback/redirect
         $userDB->pdo->feedback("Registration successful! Your account has been created.", "check");
         $userDB->pdo->pageRef('login.php');
-
     } catch (PDOException $e) {
-        # feedback
         $userDB->pdo->feedback("Registration Failed, Please try again later.", "information");
     }
 }

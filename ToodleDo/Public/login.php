@@ -5,32 +5,27 @@ require_once './../Includes/user.php';
 session_start();
 
 
-// sends logged users to dashboard
+// Sends logged users to dashboard
 $userDB->pdo->sendToDashboard();
 
 
-// handles form request
+// Handles form request
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // get user data
+    // Get user data
     $user = $userDB->logUser($_POST['email']);
 
     if ($user) {
-        // verify password
+        // Verify password
         if (password_verify($_POST['password'], $user['password'])) {
             $_SESSION['logged'] = true;
             $_SESSION['id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
             $userDB->pdo->pageRef('dashboard.php');
-        } else {
-            // Incorrect password
-            $userDB->pdo->feedback("We couldn't log you in. Please check your credentials and try again.", "cross");
         }
-        # account doesn't exist
-    } else {
-        $userDB->pdo->feedback("We couldn't log you in. Please check your credentials and try again.", "cross");
     }
+    $userDB->pdo->feedback("We couldn't log you in. Please check your credentials and try again.", "cross");
 }
 
 
