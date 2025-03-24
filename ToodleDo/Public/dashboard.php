@@ -3,6 +3,7 @@
 // SS
 session_start();
 require './../Includes/task.php';
+require './../Includes/user.php';
 
 // sends logged users to dashboard; if not authorised
 $taskDB->pdo->sendAway();
@@ -29,10 +30,43 @@ $taskDB->changeInprogress($_SESSION['id']); // Changes status of pending tasks t
 
 // Form handling
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // handling new task form
+
+    // Handling profile update
+    if (isset($_POST['pfpSave'])) {
+        $username = $taskDB->pdo->run('SELECT username FROM users WHERE id = ?', [$_SESSION['id']])->fetchColumn();
+        try {
+            // Profile update
+            $updateResult = $userDB->updateProfile(
+                $_POST['pfpName'] == $username ? null : $_POST['pfpName'],
+                $_POST['currentPassword'],
+                $_POST['newPassword'],
+                $_FILES['avatar'],
+                $_SESSION['id']
+            );
+
+            // Feedback
+            if ($updateResult === true) {
+                $taskDB->pdo->feedback("Profile Updated Successfully", "check");
+            } elseif (is_string($updateResult)) {
+                $taskDB->pdo->feedback($updateResult, "cross");
+            } else {
+                $taskDB->pdo->feedback("No Changes Were Made", "information");
+            }
+
+            // Direct to self
+        } catch (Throwable $e) {
+            $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+        } finally {
+            $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
+        }
+    }
+
+
+
+    // Handling new task form
     if (isset($_POST['addtsk'])) {
         try {
-            // task insertion
+            // Task insertion
             $taskDB->addTask(
                 $_SESSION['id'],
                 $_POST['tskTitle'],
@@ -44,11 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Feedback
             $taskDB->pdo->feedback("Task Added Successfully", "check");
-
-            $taskDB->pdo->pageRef('dashboard.php');
         } catch (\Throwable $th) {
-            // Feedback/redirect
             $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+        } finally {
             $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
         }
     }
@@ -70,13 +102,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Feedback
             $taskDB->pdo->feedback("Task Updated Successfully", "information");
-
-            // header
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
         } catch (\Throwable $th) {
-            // Feedback/redirect
             $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
+        } finally {
             $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
         }
     }
@@ -86,14 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Handling task deletion GET request
 if (isset($_GET['TSKDLXXX'])) {
-    try {
-        // task deletion
-        $taskDB->deleteTask($_GET['TSKDLXXX'], $_SESSION['id']);
-    } catch (\Throwable $th) {
-        // Feedback/redirect
-        $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
-        $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
-    }
+    $taskDB->deleteTask($_GET['TSKDLXXX'], $_SESSION['id']);
 }
 
 // Handling task status change
@@ -127,8 +148,6 @@ if (isset($_GET['TSKXXX']) && $_GET['TSKXXX']) {
         }
         $status = $tskData['status'];
     } catch (Exception $e) {
-        // echo $e->getMessage();
-        // Feedback/redirect
         $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
         $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
@@ -140,7 +159,6 @@ if (isset($_GET['NTFIDXD'])) {
         $taskDB->deleteAllNotifications($_SESSION['id']);
         unset($_SESSION['modifiedTSKS']);
     } catch (\Throwable $th) {
-        // Feedback/redirect
         $taskDB->pdo->feedback("Oopsies... Something went wrong, please try again later", "information");
         $taskDB->pdo->pageRef($_SERVER['PHP_SELF']);
     }
@@ -164,6 +182,7 @@ if (isset($_GET['NTFIDXD'])) {
     <script src="./../Js/notifications.js" defer></script>
     <script src="./../Js/getStatus.js" defer></script>
     <script src="./../Js/taskView.js" defer></script>
+    <script src="./../Js/profileManager.js" defer></script>
     <script type="text/javascript" src="./../Js/toastFeedback.js" defer></script>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -177,8 +196,9 @@ if (isset($_GET['NTFIDXD'])) {
     </button>
     <aside class="sidebar collapsed">
         <header class="sidebar-header">
-            <a href="/" class="header-logo">
-                <img src="./../Assets/Icons/todoodle.png" alt="Toodledo" />
+            <a class="header-logo">
+                <img src="./../Assets/<?php echo isset($_SESSION['profile_path']) ? htmlspecialchars($_SESSION['profile_path']) : 'Icons/todoodle.png'; ?>"
+                    alt="Toodledo" />
             </a>
             <button class="sidebar-toggler">
                 <span class="material-symbols-rounded">chevron_left</span>
@@ -216,7 +236,7 @@ if (isset($_GET['NTFIDXD'])) {
             <!-- Secondary Bottom Nav -->
             <ul class="nav-list secondary-nav">
                 <li class="nav-item">
-                    <a href="profile.php" class="nav-link">
+                    <a class="nav-link profileManagerBtn">
                         <span class="material-symbols-rounded">person</span>
                         <span class="nav-label">Profile Manager</span>
                     </a>
@@ -480,7 +500,77 @@ if (isset($_GET['NTFIDXD'])) {
             </div>
         </div>
     </div>
+    <div class="profileManager">
+        <form method="POST" enctype="multipart/form-data" class="profileWrapper">
+            <div class="profileHeader">
+                <p>🧑🏻‍💻Profile Manager</p>
+                <button type="button" class="profileCancelBtn">
+                    <span class="material-symbols-rounded">
+                        close
+                    </span>
+                </button>
+            </div>
 
+            <div class="profilePhotoWrapper">
+                <div class="pfpContain">
+                    <div class="profilePhoto">
+                        <img src="./../Assets/<?= isset($_SESSION['profile_path']) ? htmlspecialchars($_SESSION['profile_path']) : 'Icons/person.svg'; ?>"
+                            id="AvatarDisplay" alt="user">
+                    </div>
+                    <button type="button" onclick="document.getElementById('pfpAvatar').click();">Edit Avatar</button>
+                    <input type="file" id="pfpAvatar" name="avatar" accept=".jpg, .jpeg, .png" style="display: none;">
+                </div>
+            </div>
+            <div class="profileBody">
+                <div class="profileBodyTitle">
+                    <h3>Account Information</h3>
+                </div>
+                <div class="profileUserCredentials">
+                    <span class="pfpHint str">*Note you cannot edit your email*</span>
+                    <div class="profileInpGrp">
+                        <span class="material-symbols-rounded">
+                            email
+                        </span>
+                        <input type="email" name="pfpEmail" placeholder="Email" disabled
+                            value="<?= htmlspecialchars($_SESSION['email']) ?>">
+                    </div>
+                    <div class="profileInpGrp">
+                        <span class="material-symbols-rounded">
+                            person
+                        </span>
+                        <input type="text" name="pfpName" placeholder="Username"
+                            value="<?= htmlspecialchars($_SESSION['username']) ?>">
+                    </div>
+                </div>
+                <div class="profileUserPwd">
+                    <span class="pfpHint">Reset password</span>
+                    <div class="profileInpGrp">
+                        <span class="material-symbols-rounded">
+                            lock
+                        </span>
+                        <input type="password" id="currentPwd" name="currentPassword" placeholder="CurrentPassword">
+                    </div>
+                    <div class="profileInpGrp">
+                        <span class="material-symbols-rounded">
+                            vpn_key
+                        </span>
+                        <input type="password" id="newPwd" name="newPassword" placeholder="New Password">
+                    </div>
+                    <div class="profileInpGrp">
+                        <span class="material-symbols-rounded">
+                            vpn_key
+                        </span>
+                        <input type="password" id="ConfPwd" name="confPassword" placeholder="Confirm Password">
+                    </div>
+                </div>
+            </div>
+            <div class="profileFooter">
+                <a><button class="profileCancelBtn" type="button">Cancel</button></a>
+                <a><button type="submit" class="profileSaveBtn" name="pfpSave">Save
+                        Changes</button></a>
+            </div>
+        </form>
+    </div>
     <?php if (isset($_GET['TSKXXX']) && $_GET['TSKXXX'] && isset($tskData)): ?>
         <div class="frmEDIT">
             <form method="post" class="editFRMC ">
@@ -557,7 +647,8 @@ if (isset($_GET['NTFIDXD'])) {
                 <?php foreach ($allTasks as $dataKey): ?>
                     <div class="tskGroup">
                         <h4><?= htmlspecialchars($dataKey['title']) ?></h4>
-                        <h5 class="<?= htmlspecialchars($dataKey['status']) ?>"><?= htmlspecialchars($dataKey['status']) ?></h5>
+                        <h5 class="<?= htmlspecialchars($dataKey['status']) ?>"><?= htmlspecialchars($dataKey['status']) ?>
+                        </h5>
                         <hr>
                         <p><?= htmlspecialchars($dataKey['description']) ?></p>
                         <div class="tskGroupButtons">
@@ -576,7 +667,7 @@ if (isset($_GET['NTFIDXD'])) {
         </div>
     </div>
     <!-- Fancy Feedback  -->
-    <div id="toastbox uflp">
+    <div id="toastbox">
         <?php if (isset($_SESSION['userFeedback'])): ?>
             <!-- // Display toast FROM PHP // -->
             <div class="toast uflp">
@@ -587,8 +678,8 @@ if (isset($_GET['NTFIDXD'])) {
                     <?= htmlspecialchars($_SESSION['userFeedback']['message']) ?>
                 </p>
             </div>
-        </div>
-        <?php unset($_SESSION['userFeedback']); endif; ?>
+            <?php unset($_SESSION['userFeedback']); endif; ?>
+    </div>
     <script src="./../Js/loader.js"></script>
 </body>
 

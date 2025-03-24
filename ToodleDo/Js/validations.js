@@ -5,7 +5,7 @@ const password_input = document.getElementById('password-input');
 const repeat_password_input = document.getElementById('repeat-password-input');
 
 
-// assebles toast element with msg and given icon(from assets) 
+// Assembles toast element with msg and given icon(from assets) 
 function getToast(msg, icon) {
     const toastbox = document.getElementById('toastbox');
     let toast = document.createElement('div');

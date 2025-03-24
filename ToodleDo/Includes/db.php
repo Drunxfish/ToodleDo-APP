@@ -16,7 +16,7 @@ class Database
         try {
             $this->pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pwd, $options);
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            // echo $e->getMessage();
         }
     }
 
@@ -68,4 +68,3 @@ class Database
         exit();
     }
 }
-

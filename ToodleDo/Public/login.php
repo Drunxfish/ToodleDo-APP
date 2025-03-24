@@ -22,6 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
+            if (isset($user['profile_pic_path'])) {
+                $_SESSION['profile_path'] = $user['profile_pic_path'];
+            }
             $userDB->pdo->pageRef('dashboard.php');
         }
     }

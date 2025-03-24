@@ -1,6 +1,6 @@
 <?php
 
-require 'db.php';
+require_once 'db.php';
 $taskDB = new Task();
 
 class Task
@@ -268,12 +268,11 @@ class Task
         if ($tskUPDT) {
             // Feedback
             $this->pdo->feedback("Task status updated 🎉", "information");
-            $this->pdo->pageRef($_SERVER['PHP_SELF']);
         } else {
             // Feedback
             $this->pdo->feedback("Oopsies... Something went wrong, please try again later", "cross");
-            $this->pdo->pageRef($_SERVER['PHP_SELF']);
         }
+        $this->pdo->pageRef($_SERVER['PHP_SELF']);
     }
 
     // Delete task
@@ -287,14 +286,12 @@ class Task
             ]
         )->rowCount() > 0;
 
+        //
         if ($tskDLT) {
-            // Feedback
             $this->pdo->feedback("Task deleted successfully 🥹", "check");
-            $this->pdo->pageRef($_SERVER['PHP_SELF']);
         } else {
-            // Feedback
-            $this->pdo->feedback("Oopsies... Something went wrong, please try again later", "cross");
-            $this->pdo->pageRef($_SERVER['PHP_SELF']);
+            $this->pdo->feedback("Hmmmm, I know what u did there ._.", "cross");
         }
+        $this->pdo->pageRef($_SERVER['PHP_SELF']);
     }
 }
