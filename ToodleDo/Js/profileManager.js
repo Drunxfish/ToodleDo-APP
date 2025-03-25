@@ -93,7 +93,7 @@ function getToast(msg, icon) {
     toast.appendChild(wrap)
     toast.appendChild(para)
     toastbox.append(toast);
-    toastbox.style.zIndex = 9999999999999999;
+    toastbox.style.zIndex = 9999999999999999999n;
 
 
     // Delete toast on mouseover
